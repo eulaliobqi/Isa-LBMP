@@ -38,6 +38,17 @@ def parse_args():
     return ap.parse_args()
 
 
+def normalize_chrom(chrom):
+    """makeblastdb -parse_seqids reescreve o header do genoma em formato NCBI
+    (ex. "gb|CM027126.1|"); o miniprot usa o token bruto do FASTA (ex.
+    "CM027126.1"). Sem normalizar, os dois nunca batem na hora de cruzar loci
+    do TBLASTN/BLASTN_CDS com modelos do miniprot no mesmo cromossomo."""
+    parts = str(chrom).split("|")
+    if len(parts) >= 3 and parts[1]:
+        return parts[1]
+    return chrom
+
+
 def load_blast_tsv(path, cols):
     try:
         df = pd.read_csv(path, sep="\t", names=cols, header=None)
@@ -45,6 +56,7 @@ def load_blast_tsv(path, cols):
         return pd.DataFrame(columns=cols)
     if df.empty:
         return df
+    df["sseqid"] = df["sseqid"].map(normalize_chrom)
     df["strand"] = df.apply(lambda r: "+" if r.sstart <= r.send else "-", axis=1)
     df["gstart"] = df[["sstart", "send"]].min(axis=1)
     df["gend"] = df[["sstart", "send"]].max(axis=1)
