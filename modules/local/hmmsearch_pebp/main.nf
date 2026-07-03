@@ -1,7 +1,7 @@
 process HMMSEARCH_PEBP {
     tag "hmmsearch_${params.pfam_id}"
     label 'process_medium'
-    conda "bioconda::hmmer=3.4"
+    conda "bioconda::hmmer=3.4 conda-forge::pandas=2.2.3 conda-forge::biopython=1.84"
     publishDir "${params.outdir}", mode: 'copy'
 
     input:
