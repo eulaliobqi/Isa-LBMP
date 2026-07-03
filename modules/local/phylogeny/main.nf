@@ -29,7 +29,17 @@ process PHYLOGENY {
     mafft --auto --thread ${task.cpus} combined.fasta > aligned.fasta
     trimal -in aligned.fasta -out trimmed.fasta -automated1
 
-    iqtree2 \\
+    # O binário se chama "iqtree2" a partir da v2.0.4, mas builds/versões
+    # mais antigas do pacote bioconda "iqtree" só têm o binário "iqtree".
+    # Sem pin de versão (necessário pra resolver o conflito de solver),
+    # não dá pra saber de antemão qual vai ser instalado.
+    IQTREE_BIN=\$(command -v iqtree2 || command -v iqtree)
+    if [ -z "\$IQTREE_BIN" ]; then
+        echo "ERRO: nem iqtree2 nem iqtree encontrados no PATH." >&2
+        exit 1
+    fi
+
+    "\$IQTREE_BIN" \\
         -s trimmed.fasta \\
         -m ${params.iqtree_model} \\
         -bb ${params.iqtree_bootstrap} \\
