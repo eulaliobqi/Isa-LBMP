@@ -6,11 +6,12 @@
 // Plano científico completo:
 //   C:\Users\eulal\.claude\plans\objetivo-principal-usar-o-synthetic-peach.md
 //
-// Passos 1-10 do plano → processos deste workflow:
+// Passos 1-11 do plano → processos deste workflow:
 //   1. BUILD_BLASTDB          — makeblastdb no genoma Urochloa
 //   2. TBLASTN                — triagem ampla (proteína×nucleotídeo)
+//   2b. BLASTN_CDS            — evidência cruzada (CDS nucleotídeo×nucleotídeo)
 //   3. MINIPROT_INDEX/ALIGN   — estrutura gênica spliced-aware + gffread
-//   4. CONSOLIDATE_LOCI       — funde TBLASTN + miniprot em loci candidatos
+//   4. CONSOLIDATE_LOCI       — funde TBLASTN + BLASTN_CDS + miniprot em loci candidatos
 //   5. HMMSEARCH_PEBP         — confirma domínio PEBP (PF01161)
 //   6. DOWNLOAD_REF_PROTEOMES + RECIPROCAL_BEST_HIT — confirma ortologia (RBH)
 //   7. PHYLOGENY              — mafft + trimal + iqtree2 (clado FT-like)
@@ -27,6 +28,7 @@ nextflow.enable.dsl = 2
 
 include { BUILD_BLASTDB          } from './modules/local/build_blastdb/main.nf'
 include { TBLASTN                } from './modules/local/tblastn/main.nf'
+include { BLASTN_CDS             } from './modules/local/blastn_cds/main.nf'
 include { MINIPROT_INDEX         } from './modules/local/miniprot_index/main.nf'
 include { MINIPROT_ALIGN         } from './modules/local/miniprot_align/main.nf'
 include { CONSOLIDATE_LOCI       } from './modules/local/consolidate_loci/main.nf'
@@ -44,6 +46,9 @@ def validate_params() {
     if (!params.query_proteins) {
         error "ERRO: --query_proteins é obrigatório (proteínas FT-like de referência)."
     }
+    if (!params.cds_query) {
+        error "ERRO: --cds_query é obrigatório (CDS nucleotídeo dos mesmos genes de referência, para BLASTN complementar)."
+    }
     if (!params.ref_proteomes || params.ref_proteomes.size() == 0) {
         error "ERRO: params.ref_proteomes vazio — necessário para RECIPROCAL_BEST_HIT."
     }
@@ -58,6 +63,7 @@ workflow {
     ═══════════════════════════════════════════════════════════════
      Genoma alvo        : ${params.genome}
      Proteínas de ref.   : ${params.query_proteins}
+     CDS de ref. (BLASTN): ${params.cds_query}
      Referência filogenia: ${params.phylo_reference ?: '(usa query_proteins)'}
      Espécies p/ RBH     : ${params.ref_proteomes.collect { it.name }.join(', ')}
      Saída               : ${params.outdir}
@@ -67,22 +73,25 @@ workflow {
     // Arquivos de entrada reutilizados por múltiplos processos → value channels
     ch_genome = Channel.value(file(params.genome, checkIfExists: true))
     ch_query  = Channel.value(file(params.query_proteins, checkIfExists: true))
+    ch_cds    = Channel.value(file(params.cds_query, checkIfExists: true))
 
     ch_phylo_ref = params.phylo_reference
         ? Channel.value(file(params.phylo_reference, checkIfExists: true))
         : ch_query
 
-    // ── Passos 1-2: triagem BLAST ───────────────────────────────────────────
+    // ── Passos 1-2: triagem BLAST (proteína + CDS complementar) ─────────────
     BUILD_BLASTDB(ch_genome)
     TBLASTN(ch_query, BUILD_BLASTDB.out.db)
+    BLASTN_CDS(ch_cds, BUILD_BLASTDB.out.db)
 
     // ── Passo 3: estrutura gênica spliced-aware (miniprot + gffread) ───────
     MINIPROT_INDEX(ch_genome)
     MINIPROT_ALIGN(MINIPROT_INDEX.out.index, ch_genome, ch_query)
 
-    // ── Passo 4: consolidação de loci candidatos ────────────────────────────
+    // ── Passo 4: consolidação de loci candidatos (3 fontes de evidência) ────
     CONSOLIDATE_LOCI(
         TBLASTN.out.tsv,
+        BLASTN_CDS.out.tsv,
         MINIPROT_ALIGN.out.gff3,
         MINIPROT_ALIGN.out.proteins
     )

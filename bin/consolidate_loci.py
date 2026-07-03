@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Consolida hits do TBLASTN e modelos gênicos do miniprot em loci candidatos.
+"""Consolida hits do TBLASTN, BLASTN_CDS (evidência cruzada nucleotídeo) e
+modelos gênicos do miniprot em loci candidatos únicos.
 
-Ver Passo 4 do plano científico:
+Ver Passos 4/5b do plano científico:
 C:\\Users\\eulal\\.claude\\plans\\objetivo-principal-usar-o-synthetic-peach.md
 """
 import argparse
@@ -17,10 +18,18 @@ TBLASTN_COLS = [
     "qlen", "slen", "sseq",
 ]
 
+# BLASTN_CDS não emite a coluna sseq (é evidência de posição, não fonte de proteína)
+BLASTN_CDS_COLS = [
+    "qseqid", "sseqid", "pident", "length", "mismatch", "gapopen",
+    "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qcovs",
+    "qlen", "slen",
+]
+
 
 def parse_args():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--tblastn", required=True)
+    ap.add_argument("--blastn-cds", required=True)
     ap.add_argument("--miniprot-gff3", required=True)
     ap.add_argument("--miniprot-proteins", required=True)
     ap.add_argument("--cluster-distance-bp", type=int, default=20000)
@@ -29,17 +38,25 @@ def parse_args():
     return ap.parse_args()
 
 
-def load_tblastn(path):
+def load_blast_tsv(path, cols):
     try:
-        df = pd.read_csv(path, sep="\t", names=TBLASTN_COLS, header=None)
-    except pd.errors.EmptyDataError:
-        return pd.DataFrame(columns=TBLASTN_COLS)
+        df = pd.read_csv(path, sep="\t", names=cols, header=None)
+    except (pd.errors.EmptyDataError, FileNotFoundError):
+        return pd.DataFrame(columns=cols)
     if df.empty:
         return df
     df["strand"] = df.apply(lambda r: "+" if r.sstart <= r.send else "-", axis=1)
     df["gstart"] = df[["sstart", "send"]].min(axis=1)
     df["gend"] = df[["sstart", "send"]].max(axis=1)
     return df
+
+
+def load_tblastn(path):
+    return load_blast_tsv(path, TBLASTN_COLS)
+
+
+def load_blastn_cds(path):
+    return load_blast_tsv(path, BLASTN_CDS_COLS)
 
 
 def cluster_intervals(df, cluster_distance_bp):
@@ -103,6 +120,8 @@ def main():
 
     tblastn_df = load_tblastn(args.tblastn)
     tblastn_loci = cluster_intervals(tblastn_df, args.cluster_distance_bp)
+    blastn_cds_df = load_blastn_cds(args.blastn_cds)
+    blastn_cds_loci = cluster_intervals(blastn_cds_df, args.cluster_distance_bp)
     miniprot_models = parse_miniprot_gff3(args.miniprot_gff3)
 
     miniprot_proteins = {}
@@ -114,7 +133,8 @@ def main():
 
     records = []
 
-    # Loci originados do TBLASTN, tentando casar com um modelo do miniprot
+    # Loci originados do TBLASTN, tentando casar com um modelo do miniprot e,
+    # separadamente, com evidência cruzada do BLASTN_CDS (nucleotídeo)
     for chrom, strand, start, end, hits in tblastn_loci:
         queries = sorted({h.qseqid for h in hits})
         best_hit = max(hits, key=lambda h: h.bitscore)
@@ -125,29 +145,52 @@ def main():
             ):
                 matched_model = m
                 break
-        source = "tblastn+miniprot" if matched_model else "tblastn_only"
+        matched_cds = None
+        for c_chrom, c_strand, c_start, c_end, c_hits in blastn_cds_loci:
+            if c_chrom == chrom and overlaps_or_near(start, end, c_start, c_end, args.cluster_distance_bp):
+                matched_cds = (c_start, c_end, c_hits)
+                break
+
+        source_parts = ["tblastn"]
+        if matched_model:
+            source_parts.append("miniprot")
+        if matched_cds:
+            source_parts.append("blastn_cds")
+        source = "+".join(source_parts)
+
         predicted_id = matched_model["id"] if matched_model else None
         predicted_seq = miniprot_proteins.get(predicted_id) if predicted_id else None
         if predicted_seq is None:
             predicted_seq = best_hit.sseq.replace("-", "")
+
+        locus_start, locus_end = start, end
+        if matched_model:
+            locus_start, locus_end = min(locus_start, matched_model["start"]), max(locus_end, matched_model["end"])
+        if matched_cds:
+            locus_start, locus_end = min(locus_start, matched_cds[0]), max(locus_end, matched_cds[1])
+
+        cds_queries = {h.qseqid for h in matched_cds[2]} if matched_cds else set()
+        all_queries = set(queries) | ({matched_model["query"]} if matched_model else set()) | cds_queries
+
         records.append({
             "chrom": chrom,
             "strand": strand,
-            "start": min(start, matched_model["start"]) if matched_model else start,
-            "end": max(end, matched_model["end"]) if matched_model else end,
-            "queries": ";".join(sorted(set(queries) | ({matched_model["query"]} if matched_model else set()))),
+            "start": locus_start,
+            "end": locus_end,
+            "queries": ";".join(sorted(all_queries)),
             "source": source,
-            "n_queries_hit": len(queries),
+            "n_queries_hit": len(all_queries),
             "best_bitscore": best_hit.bitscore,
             "predicted_protein_id": predicted_id or f"{chrom}_{start}-{end}_tblastn",
             "predicted_protein_seq": predicted_seq,
         })
 
-    # Modelos do miniprot sem nenhum hit correspondente do TBLASTN (splicing capturou
-    # algo que a triagem ampla perdeu, ex. exon curto/divergente)
     matched_chrom_ranges = [
         (r["chrom"], r["start"], r["end"]) for r in records
     ]
+
+    # Modelos do miniprot sem nenhum hit correspondente do TBLASTN (splicing capturou
+    # algo que a triagem ampla perdeu, ex. exon curto/divergente)
     for m in miniprot_models:
         already_matched = any(
             m["chrom"] == c and overlaps_or_near(m["start"], m["end"], s, e, args.cluster_distance_bp)
@@ -167,6 +210,33 @@ def main():
             "best_bitscore": None,
             "predicted_protein_id": m["id"],
             "predicted_protein_seq": predicted_seq,
+        })
+        matched_chrom_ranges.append((m["chrom"], m["start"], m["end"]))
+
+    # Loci do BLASTN_CDS sem nenhuma corroboração de TBLASTN/miniprot — evidência
+    # mais fraca (nucleotídeo x nucleotídeo entre táxons distantes), mas registrada
+    # como candidato de menor confiança para inspeção manual, sem proteína predita
+    # disponível nesta etapa (script não tem acesso ao FASTA do genoma para traduzir).
+    for chrom, strand, start, end, hits in blastn_cds_loci:
+        already_matched = any(
+            chrom == c and overlaps_or_near(start, end, s, e, args.cluster_distance_bp)
+            for c, s, e in matched_chrom_ranges
+        )
+        if already_matched:
+            continue
+        queries = sorted({h.qseqid for h in hits})
+        best_hit = max(hits, key=lambda h: h.bitscore)
+        records.append({
+            "chrom": chrom,
+            "strand": strand,
+            "start": start,
+            "end": end,
+            "queries": ";".join(queries),
+            "source": "blastn_cds_only",
+            "n_queries_hit": len(queries),
+            "best_bitscore": best_hit.bitscore,
+            "predicted_protein_id": f"{chrom}_{start}-{end}_blastn_cds",
+            "predicted_protein_seq": None,
         })
 
     out_df = pd.DataFrame(records)

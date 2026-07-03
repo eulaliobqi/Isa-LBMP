@@ -69,8 +69,9 @@ reconectar depois.
 |---|---|---|---|
 | 1 | `BUILD_BLASTDB` | `makeblastdb` no genoma Urochloa | `urochloa_db.*` |
 | 2 | `TBLASTN` | Triagem ampla proteína×genoma (`-evalue 1e-5`) | `tblastn_raw.tsv` |
+| 2b | `BLASTN_CDS` | Evidência cruzada CDS nucleotídeo×genoma (`-evalue 1e-3`) — complementa o TBLASTN, não substitui | `blastn_cds_raw.tsv` |
 | 3 | `MINIPROT_INDEX` + `MINIPROT_ALIGN` | Estrutura gênica spliced-aware (introns) + extração da proteína predita via `gffread` | `miniprot_hits.gff3`, `miniprot_predicted_proteins.fasta` |
-| 4 | `CONSOLIDATE_LOCI` | Funde hits do TBLASTN (clusterizados) com modelos do miniprot em loci candidatos | `loci_summary.tsv`, `candidate_proteins.fasta` |
+| 4 | `CONSOLIDATE_LOCI` | Funde hits do TBLASTN + BLASTN_CDS (clusterizados) com modelos do miniprot em loci candidatos — loci com as 3 fontes são o sinal mais forte | `loci_summary.tsv`, `candidate_proteins.fasta` |
 | 5 | `HMMSEARCH_PEBP` | Confirma domínio PF01161 (PEBP) via HMMER | `pebp_confirmed.tsv`, `candidate_proteins_confirmed.fasta` |
 | 6 | `DOWNLOAD_REF_PROTEOMES` | Baixa proteomas completos de Oryza/Zea/Arabidopsis | `<especie>.faa` + blastdb |
 | 7 | `RECIPROCAL_BEST_HIT` | BLASTP recíproco — confirma ortologia real (não paráloga TFL1/MFT) | `rbh_summary.tsv` |
