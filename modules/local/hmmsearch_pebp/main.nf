@@ -13,11 +13,25 @@ process HMMSEARCH_PEBP {
     path 'candidate_proteins_confirmed.fasta', emit: confirmed_proteins
 
     script:
+    // Extração via awk (leitura direta do texto plano do Pfam-A.hmm, sem usar
+    // hmmfetch/.ssi) -- evita depender/mutar o índice do arquivo compartilhado
+    // com o Kerson-paper (hmmfetch --index falhava com "SSI index already
+    // exists" em runs repetidos, e não temos como saber se a .ssi existente
+    // foi construída com o mesmo formato de accession). Aceita ACC com ou
+    // sem sufixo de versão (ex. PF01161 ou PF01161.24).
     """
     if [ -f "${params.pfam_a_hmm}" ]; then
-        hmmfetch "${params.pfam_a_hmm}" ${params.pfam_id} > ${params.pfam_id}.hmm 2>hmmfetch.log \\
-          || { hmmfetch --index "${params.pfam_a_hmm}"; \\
-               hmmfetch "${params.pfam_a_hmm}" ${params.pfam_id} > ${params.pfam_id}.hmm; }
+        awk -v acc="${params.pfam_id}" '
+            /^HMMER/ { buf = \$0 "\\n"; keep = 0; next }
+            /^ACC/   { if (\$2 == acc || \$2 ~ ("^" acc "\\\\.")) keep = 1 }
+            { buf = buf \$0 "\\n" }
+            /^\\/\\/\$/ { if (keep) printf "%s", buf; buf = ""; keep = 0 }
+        ' "${params.pfam_a_hmm}" > ${params.pfam_id}.hmm
+
+        if [ ! -s ${params.pfam_id}.hmm ]; then
+            echo "ERRO: ${params.pfam_id} não encontrado em ${params.pfam_a_hmm} (nenhum bloco ACC correspondente)." >&2
+            exit 1
+        fi
     else
         echo "AVISO: Pfam-A.hmm não encontrado em ${params.pfam_a_hmm}." >&2
         echo "Tentando download do HMM de ${params.pfam_id} via InterPro (pode falhar por bloqueio de rede do servidor)..." >&2
