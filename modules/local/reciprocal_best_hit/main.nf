@@ -32,7 +32,7 @@ process RECIPROCAL_BEST_HIT {
             -out fwd_\${sp}.tsv
 
         if [ -s fwd_\${sp}.tsv ]; then
-            # ${sp}_db foi construído com -parse_seqids, então o sseqid que o blastp
+            # \${sp}_db foi construído com -parse_seqids, então o sseqid que o blastp
             # reporta em -outfmt 6 vem no formato NCBI "ref|ACCESSION|" -- mas
             # blastdbcmd -entry_batch espera o accession puro, sem o wrapper.
             # Sem essa limpeza, -entry_batch não acha nada, fwd_hits.fasta fica
