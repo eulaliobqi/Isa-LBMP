@@ -1,0 +1,16 @@
+# ============================================================================
+# params.yaml — exemplo de arquivo de parâmetros para `nextflow run main.nf -params-file params.yaml`
+# Todos os campos aqui já têm default equivalente em nextflow.config;
+# use este arquivo só para sobrescrever o que for diferente na sua execução.
+# ============================================================================
+
+genome: "/home/eulalio/databases/urochloa_ruziziensis/urochloa_ruziziensis_Embrapa_Uruz_1.0.fasta"
+query_proteins: "reference_queries.fasta"
+
+# Descomente e aponte para um FASTA expandido (FT + TFL1-like + MFT-like das
+# mesmas espécies) quando estiver pronto para a filogenia de confirmação de
+# ortologia (Decisão 3 do plano científico):
+# phylo_reference: "reference_queries_expanded_tfl1_mft.fasta"
+
+outdir: "results"
+threads: 32

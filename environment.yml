@@ -1,0 +1,26 @@
+name: isa-lbmp
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.11
+  - blast=2.16.0
+  - hmmer=3.4
+  - seqkit
+  - miniprot
+  - gffread
+  - mafft
+  - trimal
+  - iqtree=2.3
+  - biopython
+  - pandas
+  - matplotlib
+  - ncbi-datasets-cli
+  - nextflow>=23.04
+  # R — não usados no caminho crítico (REPORT é Python), disponíveis para
+  # extensão manual futura (ex.: diagrama de loci com gggenes)
+  - r-base
+  - r-tidyverse
+  - r-ggplot2
+  - r-gggenes

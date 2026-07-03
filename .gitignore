@@ -1,0 +1,22 @@
+# Genomas e dados brutos grandes — ficam só no servidor / disco local, nunca no git
+ncbi cromossomo urochloa/
+sequencias cromossomos brizantha unidas.txt
+*.fasta.gz
+*.mpi
+work/
+.nextflow/
+.nextflow.log*
+urochloa_db.*
+results/
+ref_proteomes_cache/
+
+# Databases de referência (Pfam etc.)
+databases/
+
+# Temporários de sessão anteriores
+*_raw_check.txt
+sbp5_ft_extracted.txt
+
+# Sistema
+.DS_Store
+*.log
