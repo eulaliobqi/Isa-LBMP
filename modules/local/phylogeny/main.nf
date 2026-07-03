@@ -1,7 +1,12 @@
 process PHYLOGENY {
     tag "phylogeny_ft_pebp"
     label 'process_medium'
-    conda "bioconda::mafft=7.525 bioconda::trimal=1.5.0 bioconda::iqtree=2.3.6"
+    // Sem pin de versão: os 3 pacotes juntos com versões exatas fixas geram
+    // conflito de dependências transitivas no solver (mamba "is not
+    // installable because it conflicts with any installable versions
+    // previously reported"); deixar o mamba escolher versões mutuamente
+    // compatíveis é mais robusto aqui do que reproducibilidade exata.
+    conda "bioconda::mafft bioconda::trimal bioconda::iqtree"
     publishDir "${params.outdir}/phylogeny", mode: 'copy'
 
     input:
