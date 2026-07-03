@@ -1,7 +1,7 @@
 process CONSOLIDATE_LOCI {
     tag "consolidate_loci"
     label 'process_low'
-    conda "conda-forge::pandas=2.2 conda-forge::biopython=1.84"
+    conda "conda-forge::pandas=2.2.3 conda-forge::biopython=1.84"
     publishDir "${params.outdir}", mode: 'copy'
 
     input:

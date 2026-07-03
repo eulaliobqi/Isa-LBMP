@@ -12,7 +12,7 @@ dependencies:
   - gffread
   - mafft
   - trimal
-  - iqtree=2.3
+  - iqtree=2.3.6
   - biopython
   - pandas
   - matplotlib

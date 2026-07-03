@@ -1,7 +1,7 @@
 process REPORT {
     tag "final_report"
     label 'process_low'
-    conda "conda-forge::pandas=2.2 conda-forge::matplotlib=3.9 conda-forge::biopython=1.84"
+    conda "conda-forge::pandas=2.2.3 conda-forge::matplotlib=3.9.0 conda-forge::biopython=1.84"
     publishDir "${params.outdir}", mode: 'copy'
 
     input:

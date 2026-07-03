@@ -1,7 +1,7 @@
 process PHYLOGENY {
     tag "phylogeny_ft_pebp"
     label 'process_medium'
-    conda "bioconda::mafft=7.526 bioconda::trimal=1.5.0 bioconda::iqtree=2.3"
+    conda "bioconda::mafft=7.525 bioconda::trimal=1.5.0 bioconda::iqtree=2.3.6"
     publishDir "${params.outdir}/phylogeny", mode: 'copy'
 
     input:

@@ -1,7 +1,7 @@
 process DOWNLOAD_REF_PROTEOMES {
     tag "${meta.name}"
     label 'process_low'
-    conda "bioconda::ncbi-datasets-cli=16 bioconda::blast=2.16.0"
+    conda "conda-forge::ncbi-datasets-cli=18.31.0 bioconda::blast=2.16.0"
     publishDir "${params.outdir}/reference_proteomes", mode: 'copy', pattern: '*.faa'
 
     input:

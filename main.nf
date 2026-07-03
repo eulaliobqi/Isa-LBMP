@@ -126,16 +126,19 @@ workflow {
         RECIPROCAL_BEST_HIT.out.rbh_summary,
         PHYLOGENY.out.treefile
     )
+}
 
-    // Nextflow >=24 exige que handlers de evento fiquem dentro de um bloco
-    // workflow/process/function — não mais como statement solto no topo do script.
-    workflow.onComplete {
-        log.info """
-        ═══════════════════════════════════════════════════════════════
-         Isa-LBMP finalizado — status: ${workflow.success ? 'OK' : 'FALHOU'}
-         Duração: ${workflow.duration}
-         Resultados: ${params.outdir}
-        ═══════════════════════════════════════════════════════════════
-        """.stripIndent()
-    }
+// Forma de atribuição (workflow.onComplete = { ... }), não a forma de statement
+// solto (workflow.onComplete { ... }) — a segunda quebra em Nextflow >=24 (strict
+// syntax rejeita statement fora de bloco) e, quando movida para dentro do
+// workflow{} de entrada, falha em tempo de execução (escopo do onComplete não
+// deve ficar aninhado dentro do próprio workflow que ele observa).
+workflow.onComplete = {
+    log.info """
+    ═══════════════════════════════════════════════════════════════
+     Isa-LBMP finalizado — status: ${workflow.success ? 'OK' : 'FALHOU'}
+     Duração: ${workflow.duration}
+     Resultados: ${params.outdir}
+    ═══════════════════════════════════════════════════════════════
+    """.stripIndent()
 }

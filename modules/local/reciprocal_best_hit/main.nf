@@ -1,7 +1,7 @@
 process RECIPROCAL_BEST_HIT {
     tag "reciprocal_best_hit"
     label 'process_medium'
-    conda "bioconda::blast=2.16.0 conda-forge::pandas=2.2 conda-forge::biopython=1.84"
+    conda "bioconda::blast=2.16.0 conda-forge::pandas=2.2.3 conda-forge::biopython=1.84"
     publishDir "${params.outdir}", mode: 'copy'
 
     input:

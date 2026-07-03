@@ -19,10 +19,12 @@ em `SBP5 + FT.docx`.
   100% CPU-bound (BLAST/HMMER/MAFFT/IQ-TREE não usam GPU).
 - Acesso SSH configurado (chave própria, sem senha) — ver Passo 0 do plano
   científico.
-- Ambiente `isa-lbmp` criado via mamba:
-  ```bash
-  mamba env create -f environment.yml
-  ```
+- `mamba` disponível no PATH (usado pelo Nextflow para criar automaticamente
+  um ambiente conda por processo, cacheado em `work/conda/`, na primeira
+  execução — não precisa criar `environment.yml` manualmente antes de rodar).
+  `environment.yml` fica disponível só para uso manual/exploração interativa
+  (`mamba env create -f environment.yml && mamba activate isa-lbmp`), não é
+  mais um pré-requisito do pipeline em si.
 - **Antes de transferir o genoma (583 MB), confira espaço em disco:**
   ```bash
   df -h ~
@@ -65,9 +67,10 @@ desconectar o SSH:
 ```bash
 ssh isalbmp-server
 screen -S isa-lbmp
-mamba activate isa-lbmp   # ou deixe o profile -profile mamba cuidar disso
 cd ~/Isa-LBMP
 git pull                  # sempre sincronizar com o último commit antes de rodar
+# não precisa ativar nenhum env manualmente — o profile mamba/local faz o
+# Nextflow criar e cachear um env conda por processo automaticamente
 
 nextflow run main.nf \
     -profile mamba,local \
