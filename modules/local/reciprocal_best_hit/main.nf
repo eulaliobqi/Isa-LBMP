@@ -17,7 +17,12 @@ process RECIPROCAL_BEST_HIT {
     def species = params.ref_proteomes.collect { it.name }.join(' ')
     """
     cat candidate_proteins_confirmed.fasta query_proteins.fasta > combined_reference.fasta
-    makeblastdb -in combined_reference.fasta -dbtype prot -parse_seqids -out combined_reference_db
+    # Sem -parse_seqids: os headers de candidate_proteins_confirmed.fasta (gerados
+    # por bin/consolidate_loci.py, formato "locus_NNN|proteina|source=...") passam
+    # de 50 caracteres, limite do BLAST para IDs quando -parse_seqids é usado.
+    # Não precisa aqui -- combined_reference_db só é alvo de blastp (nunca de
+    # blastdbcmd -entry/-entry_batch, que é a única razão de usar -parse_seqids).
+    makeblastdb -in combined_reference.fasta -dbtype prot -out combined_reference_db
 
     for sp in ${species}; do
         # 1) candidatos -> proteoma da espécie (melhor hit direto)
