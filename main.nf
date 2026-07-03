@@ -126,14 +126,16 @@ workflow {
         RECIPROCAL_BEST_HIT.out.rbh_summary,
         PHYLOGENY.out.treefile
     )
-}
 
-workflow.onComplete {
-    log.info """
-    ═══════════════════════════════════════════════════════════════
-     Isa-LBMP finalizado — status: ${workflow.success ? 'OK' : 'FALHOU'}
-     Duração: ${workflow.duration}
-     Resultados: ${params.outdir}
-    ═══════════════════════════════════════════════════════════════
-    """.stripIndent()
+    // Nextflow >=24 exige que handlers de evento fiquem dentro de um bloco
+    // workflow/process/function — não mais como statement solto no topo do script.
+    workflow.onComplete {
+        log.info """
+        ═══════════════════════════════════════════════════════════════
+         Isa-LBMP finalizado — status: ${workflow.success ? 'OK' : 'FALHOU'}
+         Duração: ${workflow.duration}
+         Resultados: ${params.outdir}
+        ═══════════════════════════════════════════════════════════════
+        """.stripIndent()
+    }
 }
