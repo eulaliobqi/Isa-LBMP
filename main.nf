@@ -126,19 +126,13 @@ workflow {
         RECIPROCAL_BEST_HIT.out.rbh_summary,
         PHYLOGENY.out.treefile
     )
-}
 
-// Forma de atribuição (workflow.onComplete = { ... }), não a forma de statement
-// solto (workflow.onComplete { ... }) — a segunda quebra em Nextflow >=24 (strict
-// syntax rejeita statement fora de bloco) e, quando movida para dentro do
-// workflow{} de entrada, falha em tempo de execução (escopo do onComplete não
-// deve ficar aninhado dentro do próprio workflow que ele observa).
-workflow.onComplete = {
-    log.info """
-    ═══════════════════════════════════════════════════════════════
-     Isa-LBMP finalizado — status: ${workflow.success ? 'OK' : 'FALHOU'}
-     Duração: ${workflow.duration}
-     Resultados: ${params.outdir}
-    ═══════════════════════════════════════════════════════════════
-    """.stripIndent()
+    // Nextflow 26.x rejeita QUALQUER statement solto no topo do script, mesmo
+    // atribuição (workflow.onComplete = {...} também falha, mesma msg de erro
+    // que a forma de closure). Único jeito de compilar: registrar o handler
+    // de dentro de um bloco permitido (aqui, o workflow{} de entrada). Log
+    // simplificado pra reduzir superfície de erro em runtime.
+    workflow.onComplete {
+        log.info "Isa-LBMP finalizado — status: ${workflow.success ? 'OK' : 'FALHOU'} | duração: ${workflow.duration} | resultados: ${params.outdir}"
+    }
 }
