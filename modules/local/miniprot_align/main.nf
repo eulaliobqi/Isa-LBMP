@@ -16,8 +16,14 @@ process MINIPROT_ALIGN {
     script:
     // gffread roda no mesmo processo do miniprot para não restagear o genoma
     // (583 MB) em uma segunda task — decisão de design confirmada no plano.
+    //
+    // miniprot --gff embute linhas de resumo "##PAF" (extensão própria, fora
+    // do padrão GFF3) intercaladas com as features reais -- gffread não
+    // reconhece essas linhas e quebra ("unexpected tab character", "Error
+    // parsing feature score"). Filtradas antes de gravar o GFF3 final.
     """
-    miniprot -t${task.cpus} --gff genome.mpi query_proteins.fasta > miniprot_hits.gff3
+    miniprot -t${task.cpus} --gff genome.mpi query_proteins.fasta \\
+        | grep -v '^##PAF' > miniprot_hits.gff3
 
     if [ ! -s miniprot_hits.gff3 ]; then
         echo "AVISO: miniprot não retornou nenhum modelo gênico." >&2
