@@ -32,7 +32,12 @@ process RECIPROCAL_BEST_HIT {
             -out fwd_\${sp}.tsv
 
         if [ -s fwd_\${sp}.tsv ]; then
-            cut -f2 fwd_\${sp}.tsv | sort -u > fwd_\${sp}_hits.txt
+            # ${sp}_db foi construído com -parse_seqids, então o sseqid que o blastp
+            # reporta em -outfmt 6 vem no formato NCBI "ref|ACCESSION|" -- mas
+            # blastdbcmd -entry_batch espera o accession puro, sem o wrapper.
+            # Sem essa limpeza, -entry_batch não acha nada, fwd_hits.fasta fica
+            # vazio, e o RBH nunca confirma nada (mesmo em auto-hits triviais).
+            cut -f2 fwd_\${sp}.tsv | sed -E 's/^[a-zA-Z]+\\|//; s/\\|\$//' | sort -u > fwd_\${sp}_hits.txt
             blastdbcmd -db \${sp}_db -entry_batch fwd_\${sp}_hits.txt -out fwd_\${sp}_hits.fasta
 
             # 2) melhores hits da espécie -> de volta contra candidatos + queries originais
