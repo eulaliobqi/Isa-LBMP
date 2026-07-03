@@ -32,14 +32,29 @@ em `SBP5 + FT.docx`.
 
 ## Como transferir o genoma para o servidor
 
-O genoma **não é versionado** neste repositório (`.gitignore` exclui os
-FASTA grandes). Transferir separadamente via `scp` a partir do notebook
-Windows:
+O genoma **não é versionado** neste repositório (`.gitignore` exclui
+`genoma.fa` e o nome original). Transferir via `scp` a partir do notebook
+Windows diretamente para dentro do diretório do projeto no servidor, e
+renomear para o nome que o pipeline espera por padrão (`genoma.fa`,
+`params.genome` em `nextflow.config`):
 
 ```bash
-ssh isalbmp-server "mkdir -p /home/eulalio/databases/urochloa_ruziziensis"
 scp -C "sequencias cromossomos brizantha unidas.txt" \
-    isalbmp-server:/home/eulalio/databases/urochloa_ruziziensis/urochloa_ruziziensis_Embrapa_Uruz_1.0.fasta
+    isalbmp-server:~/Isa-LBMP/genoma.fa
+```
+
+Se o arquivo já foi transferido com outro nome (ex.:
+`~/Isa-LBMP/sequencias cromossomos brizantha unidas.txt`), só renomear no
+servidor:
+
+```bash
+cd ~/Isa-LBMP
+mv "sequencias cromossomos brizantha unidas.txt" genoma.fa
+```
+
+Confirme a integridade (deve dar **9**, um por cromossomo):
+```bash
+grep -c "^>" genoma.fa
 ```
 
 ## Como rodar
@@ -51,13 +66,14 @@ desconectar o SSH:
 ssh isalbmp-server
 screen -S isa-lbmp
 mamba activate isa-lbmp   # ou deixe o profile -profile mamba cuidar disso
-cd ~/isa-lbmp
+cd ~/Isa-LBMP
 git pull                  # sempre sincronizar com o último commit antes de rodar
 
 nextflow run main.nf \
     -profile mamba,local \
-    -params-file params.yaml \
-    --genome /home/eulalio/databases/urochloa_ruziziensis/urochloa_ruziziensis_Embrapa_Uruz_1.0.fasta
+    -params-file params.yaml
+    # --genome não precisa ser passado se o arquivo estiver em ~/Isa-LBMP/genoma.fa
+    # (default em nextflow.config); só use --genome se estiver em outro lugar/nome.
 ```
 
 `Ctrl+A, D` para desanexar da screen com segurança; `screen -r isa-lbmp` para

@@ -1,6 +1,8 @@
 # Genomas e dados brutos grandes — ficam só no servidor / disco local, nunca no git
 ncbi cromossomo urochloa/
 sequencias cromossomos brizantha unidas.txt
+genoma.fa
+genoma.fa.*
 *.fasta.gz
 *.mpi
 work/

@@ -4,7 +4,9 @@
 # use este arquivo só para sobrescrever o que for diferente na sua execução.
 # ============================================================================
 
-genome: "/home/eulalio/databases/urochloa_ruziziensis/urochloa_ruziziensis_Embrapa_Uruz_1.0.fasta"
+# genome: aponta pro default "${projectDir}/genoma.fa" (nextflow.config) — só
+# descomente/edite se o arquivo estiver em outro lugar/nome no seu servidor.
+# genome: "genoma.fa"
 query_proteins: "reference_queries.fasta"
 
 # Descomente e aponte para um FASTA expandido (FT + TFL1-like + MFT-like das
