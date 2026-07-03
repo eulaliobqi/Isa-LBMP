@@ -47,6 +47,18 @@ def candidate_locus(seq_id):
     return seq_id.split("|", 1)[0]
 
 
+def strip_id_wrapper(seq_id):
+    """makeblastdb -parse_seqids faz o blastp reportar sseqid como
+    "ref|ACCESSION|" (formato NCBI), mas blastdbcmd -entry_batch extrai (e o
+    blastp reciproco lê de volta) o header ORIGINAL, accession puro -- sem
+    normalizar os dois lados pro mesmo formato antes de cruzar, o lookup
+    nunca bate mesmo em auto-hits triviais."""
+    parts = str(seq_id).split("|")
+    if len(parts) >= 3 and parts[1]:
+        return parts[1]
+    return seq_id
+
+
 def main():
     args = parse_args()
     records = []
@@ -55,10 +67,11 @@ def main():
         fwd = read_blast_tsv(f"fwd_{sp}.tsv")
         rev = read_blast_tsv(f"rev_{sp}.tsv")
         fwd_best = best_hit_per_query(fwd)   # candidate_id -> species_protein_id
-        rev_best = best_hit_per_query(rev)   # species_protein_id -> combined_ref_id
+        rev_best_raw = best_hit_per_query(rev)   # species_protein_id -> combined_ref_id
+        rev_best = {strip_id_wrapper(k): v for k, v in rev_best_raw.items()}
 
         for candidate_id, species_protein_id in fwd_best.items():
-            rev_hit = rev_best.get(species_protein_id)
+            rev_hit = rev_best.get(strip_id_wrapper(species_protein_id))
             reciprocal_confirmed = False
             if rev_hit is not None:
                 if is_candidate_id(rev_hit):
