@@ -9,9 +9,17 @@
 # genome: "genoma.fa"
 query_proteins: "reference_queries.fasta"
 
-# Descomente e aponte para um FASTA expandido (FT + TFL1-like + MFT-like das
-# mesmas espécies) quando estiver pronto para a filogenia de confirmação de
-# ortologia (Decisão 3 do plano científico):
+# Filogenia usa as 4 referências originais + 15 homólogos reais de Urochloa
+# (U. humidicola/U. decumbens, 73-88% identidade, baixados via BLASTP em
+# 2026-07-09 — ver bin/blastp_top5_homologs.py e blastp_homologs/summary.tsv).
+# Fortalece o posicionamento filogenético de locus_001 com parentes próximos
+# de verdade, em vez de só arroz/milho/Arabidopsis.
+phylo_reference: "reference_queries_expanded_urochloa.fasta"
+
+# Ainda pendente (Decisão 3 do plano científico, gap diferente): expandir com
+# TFL1-like/MFT-like das mesmas espécies para discriminar ortologia FT vs.
+# parálogos antagonistas — nenhuma sequência baixada até agora resolve isso,
+# pois todas as referências (originais + Urochloa novas) são FT-like.
 # phylo_reference: "reference_queries_expanded_tfl1_mft.fasta"
 
 outdir: "results"
