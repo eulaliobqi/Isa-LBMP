@@ -87,20 +87,31 @@ Análise da primeira árvore (`reference_queries_expanded_urochloa.fasta`, sem o
 
 Sem outgroup, os nós profundos que conectam os 3 clados tinham suporte fraco (bootstrap 47–70), e a posição de `locus_001` "na base" da árvore era um artefato do Newick não-enraizado do IQ-TREE, sem interpretação biológica confiável.
 
-### 3.4 Filogenia com outgroup MFT-like — *em andamento*
+### 3.4 Filogenia com outgroup MFT-like — CONCLUÍDA
 
-Rodagem com `reference_queries_expanded_tfl1_mft.fasta` + `iqtree_outgroup` (as 3 MFT-like) iniciada em 2026-07-10 no servidor (`-resume`, reaproveitando os processos anteriores ao `PHYLOGENY`). **Resultado ainda não disponível neste documento** — critério de sucesso: `locus_001` deve cair claramente dentro do clado FT (junto de Hd3a/RFT1/ZCN8), separado do clado TFL1-like e do outgroup MFT-like. Ver [§5.1](#51-proximo-passo-imediato).
+Rodagem com `reference_queries_expanded_tfl1_mft.fasta` + `iqtree_outgroup` (as 3 MFT-like) concluída em 2026-07-10 no servidor (`-resume`, reaproveitando os processos anteriores ao `PHYLOGENY`). Árvore renderizada em `results/figures/phylogeny_tree_rooted_tfl1_mft.png`.
+
+**A árvore agora é enraizada com significado biológico real** (raiz = `NP_173250.1`, MFT de Arabidopsis) e resolve de forma limpa os 3 grupos esperados:
+
+1. **Clado MFT** (raiz): `NP_173250.1` (Arabidopsis) → (`NP_001410922.1` [arroz], bootstrap 62) → (**`locus_012`** + `NP_001106249.1` [ZCN10, milho], bootstrap **100**, branch length ≈0). **Achado novo**: `locus_012`, que tinha evidência fraca de RBH e era tratado como candidato FT-like fragmentado, na verdade **não é FT-like — é um ortólogo de MFT** (agrupa quase identicamente com ZCN10 de milho). Reclassificado.
+2. **Clado TFL1-like** (bootstrap 98, sister ao clado FT): `NP_196004.1` (Arabidopsis TFL1) + (`XP_015624118.1` [arroz] + `NP_001106241.1` [milho, ZCN2], bootstrap 93). **Nenhum locus de Urochloa cai aqui.**
+3. **Clado FT-like** (bootstrap 99, ingroup principal): contém `locus_001`, `locus_002`, `locus_005`, `locus_009`, `locus_015` — todos claramente do lado FT do split, separados do TFL1-like e do outgroup MFT. Dentro dele:
+   - subclado ZCN8-type (bootstrap 100): `locus_005` + homólogos Urochloa + `NP_001106247.1` (ZCN8)
+   - subclado Arabidopsis-FT/paralogos (bootstrap 56): `locus_002`+`NP_001320342.1` (84) e `locus_009`/`015`+homólogos Urochloa (100)
+   - subclado Hd3a/RFT1-type (bootstrap 82): **`locus_001`** + `NP_001408118.1`(Hd3a)/`NP_001408117.1`(RFT1) + homólogos Urochloa densamente agrupados (92–95) — posição fina de `locus_001` entre os homólogos mais próximos tem suporte fraco (30–50, esperado dado a altíssima similaridade entre eles), mas sua alocação no clado FT-like como um todo é robusta.
+
+**Critério de sucesso do §3.4 anterior confirmado**: `locus_001` cai dentro do clado FT, separado do TFL1-like e do outgroup MFT-like.
 
 ## 4. Discussão
 
-- **`locus_001`** (CM027126.1:~30.720.251–30.721.504, fita +) é, até aqui, o candidato mais forte a ortólogo de FT em *U. ruziziensis*: única confirmação com as 3 fontes de evidência simultâneas (TBLASTN+BLASTN_CDS+miniprot), maior bitscore (155), proteína completa (179 aa) e RBH limpo (3/3 espécies, sem ambiguidade de parálogo).
-- A existência de **3 clados FT-like distintos** (`locus_001`-type, `locus_009/015`-type, `locus_005`≈ZCN8-type) é biologicamente esperada — gramíneas costumam ter pequenas famílias de genes FT-like (arroz: Hd3a+RFT1; milho: múltiplos ZCN) — e reforça que a triagem ampla capturou a diversidade real do locus, não ruído.
-- O achado de que `NP_001106249.1` (ZCN10, milho), confirmado nesta etapa como MFT-like verdadeiro, já havia aparecido como *forward hit* de `locus_012` no RBH da rodagem anterior é um indício (a confirmar na árvore com outgroup) de que **`locus_012` pode ser MFT-like, não um fragmento FT-like aleatório** — hipótese a testar diretamente no resultado do §3.4.
-- **Fragmentos curtos** (`locus_002`, 76 aa; `locus_012`, 72 aa) têm evidência bem mais fraca (só TBLASTN, sem confirmação por miniprot/BLASTN_CDS) que os candidatos completos — interpretar com cautela; podem refletir genes reais truncados na montagem, pseudogenes, ou artefatos de triagem.
+- **`locus_001`** (CM027126.1:~30.720.251–30.721.504, fita +) é o candidato confirmado a ortólogo de FT em *U. ruziziensis*: única confirmação com as 3 fontes de evidência simultâneas (TBLASTN+BLASTN_CDS+miniprot), maior bitscore (155), proteína completa (179 aa), RBH limpo (3/3 espécies, sem ambiguidade de parálogo) **e agora também confirmação filogenética direta** — cai dentro do clado FT-like (bootstrap 99), claramente separado do clado TFL1-like (bootstrap 98) e do outgroup MFT-like, no subclado Hd3a/RFT1-type (bootstrap 82) junto com os homólogos mais próximos de *Urochloa*. **Está pronto para ser reportado como candidato publicável.**
+- A existência de **3 clados FT-like distintos dentro do ingroup confirmado** (`locus_001`-type/Hd3a-RFT1, `locus_009/015`-type, `locus_005`≈ZCN8-type) é biologicamente esperada — gramíneas costumam ter pequenas famílias de genes FT-like (arroz: Hd3a+RFT1; milho: múltiplos ZCN) — e reforça que a triagem ampla capturou a diversidade real do locus, não ruído.
+- **Reclassificação de `locus_012`**: a suspeita levantada pela coincidência do RBH (§3.2, `NP_001106249.1` como forward-hit) foi **confirmada pela filogenia enraizada** — `locus_012` cai dentro do clado MFT (bootstrap 100, quase idêntico a ZCN10 de milho), não do clado FT-like. Não deve mais ser tratado como candidato FT-like (nem como "fragmento fraco" da família FT) — é um ortólogo de MFT, com implicação biológica distinta (MFT regula germinação/dormência de semente e integra sinalização floral de forma indireta, não é o florígeno em si).
+- **Fragmento curto restante**: `locus_002` (76 aa) segue com evidência mais fraca (só TBLASTN) dentro do clado FT-like — interpretar com cautela; pode ser um gene real truncado na montagem, pseudogene, ou artefato de triagem.
 
 ### 5.1 Próximo passo imediato
 
-Confirmar se, com o outgroup MFT-like, `locus_001` permanece claramente dentro do clado FT — se sim, `locus_001` está pronto para ser reportado como candidato publicável a ortólogo funcional de FT em *Urochloa*, servindo de base para o desenho de dsRNA (Objetivo Específico 1 da proposta).
+Com `locus_001` confirmado (evidência de sequência + RBH + filogenia enraizada), o próximo passo é **consolidar esse resultado como candidato final** para a etapa de desenho de dsRNA (extrair a região codificante completa, identificar segmentos conservados vs. específicos para o Objetivo Específico 1 da proposta).
 
 ### 5.2 Consideração metodológica pendente
 
@@ -117,3 +128,4 @@ Avaliar se `locus_009`/`locus_015` (segundo clado FT-like, bem suportado mas com
 | Data | O que mudou |
 |---|---|
 | 2026-07-10 | Criação do documento. Consolida: descoberta de loci, RBH confirmado (`locus_001` 3/3), expansão com homólogos de *Urochloa*, identificação de TFL1-like/MFT-like reais e configuração do outgroup. Filogenia com outgroup rodando no servidor, resultado pendente. |
+| 2026-07-10 | **Filogenia com outgroup MFT concluída.** `locus_001` confirmado dentro do clado FT-like (bootstrap 99), separado de TFL1-like (98) e MFT (raiz) — candidato pronto para reportar. Achado novo: `locus_012` reclassificado de "FT-like fraco" para **MFT-like** (bootstrap 100 com ZCN10 de milho). §3.4, §4 e §5.1 atualizados. |
