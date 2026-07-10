@@ -9,18 +9,25 @@
 # genome: "genoma.fa"
 query_proteins: "reference_queries.fasta"
 
-# Filogenia usa as 4 referências originais + 15 homólogos reais de Urochloa
-# (U. humidicola/U. decumbens, 73-88% identidade, baixados via BLASTP em
-# 2026-07-09 — ver bin/blastp_top5_homologs.py e blastp_homologs/summary.tsv).
-# Fortalece o posicionamento filogenético de locus_001 com parentes próximos
-# de verdade, em vez de só arroz/milho/Arabidopsis.
-phylo_reference: "reference_queries_expanded_urochloa.fasta"
-
-# Ainda pendente (Decisão 3 do plano científico, gap diferente): expandir com
-# TFL1-like/MFT-like das mesmas espécies para discriminar ortologia FT vs.
-# parálogos antagonistas — nenhuma sequência baixada até agora resolve isso,
-# pois todas as referências (originais + Urochloa novas) são FT-like.
-# phylo_reference: "reference_queries_expanded_tfl1_mft.fasta"
+# Filogenia usa o conjunto de referência completo (25 seqs, 2026-07-09/10):
+#   - 4 FT-like originais (Hd3a, RFT1, ZCN8, FT-Arabidopsis)
+#   - 15 homólogos reais de Urochloa (U. humidicola/U. decumbens, 73-88%
+#     identidade, via BLASTP restrito a Urochloa[Organism])
+#   - 3 TFL1-like verificados por BLASTP (Arabidopsis NP_196004.1, arroz
+#     XP_015624118.1 "SELF-PRUNING"/CEN-like, milho NP_001106241.1 ZCN2)
+#   - 3 MFT-like verificados por BLASTP (Arabidopsis NP_173250.1, arroz
+#     NP_001410922.1, milho NP_001106249.1 ZCN10) — usados como outgroup
+#     (ver iqtree_outgroup no nextflow.config) por serem basais ao split
+#     FT/TFL1 (Wickland & Hanzawa 2015)
+# Resolve a lacuna de discriminação FT vs. TFL1/MFT (Decisão 3 do plano
+# científico) e mantém o contexto de parentes próximos de Urochloa.
+phylo_reference: "reference_queries_expanded_tfl1_mft.fasta"
 
 outdir: "results"
 threads: 32
+
+# Outgroup MFT-like (basal ao split FT/TFL1) pra enraizar a árvore com
+# significado biológico de verdade — sem isso o IQ-TREE escreve um Newick
+# tecnicamente não-enraizado (foi o que produziu a posição estranha de
+# locus_001 "na base" da árvore anterior, sem suporte real).
+iqtree_outgroup: "NP_173250.1,NP_001410922.1,NP_001106249.1"
