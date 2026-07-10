@@ -1,0 +1,21 @@
+query_acc	query_desc	hit_acc	hit_desc	pct_identity	evalue	bitscore
+NP_001408118.1	NP_001408118.1 protein HEADING DATE 3A [Oryza sativa Japonica Group]	CAN6165038	emb|CAN6165038.1| unnamed protein product [Urochloa humidicola] >emb|CAN6179260.1| unnamed protein product [Urochloa hum	88.3	2.39e-115	327.4
+NP_001408118.1	NP_001408118.1 protein HEADING DATE 3A [Oryza sativa Japonica Group]	CAN6172598	emb|CAN6172598.1| unnamed protein product [Urochloa humidicola]	87.7	1.08e-114	325.5
+NP_001408118.1	NP_001408118.1 protein HEADING DATE 3A [Oryza sativa Japonica Group]	CAN6202472	emb|CAN6202472.1| unnamed protein product [Urochloa humidicola] >emb|CAN6208635.1| unnamed protein product [Urochloa hum	86.6	2.82e-113	322.0
+NP_001408118.1	NP_001408118.1 protein HEADING DATE 3A [Oryza sativa Japonica Group]	CAL5044486	emb|CAL5044486.1| unnamed protein product [Urochloa decumbens]	88.4	1.16e-112	320.5
+NP_001408118.1	NP_001408118.1 protein HEADING DATE 3A [Oryza sativa Japonica Group]	CAL5036879	emb|CAL5036879.1| unnamed protein product [Urochloa decumbens]	87.8	3.81e-112	318.9
+NP_001408117.1	NP_001408117.1 protein RICE FLOWERING LOCUS T 1 [Oryza sativa Japonica Group]	CAN6172598	emb|CAN6172598.1| unnamed protein product [Urochloa humidicola]	86.5	2.93e-114	324.7
+NP_001408117.1	NP_001408117.1 protein RICE FLOWERING LOCUS T 1 [Oryza sativa Japonica Group]	CAN6165038	emb|CAN6165038.1| unnamed protein product [Urochloa humidicola] >emb|CAN6179260.1| unnamed protein product [Urochloa hum	86.0	1.11e-113	323.2
+NP_001408117.1	NP_001408117.1 protein RICE FLOWERING LOCUS T 1 [Oryza sativa Japonica Group]	CAN6202472	emb|CAN6202472.1| unnamed protein product [Urochloa humidicola] >emb|CAN6208635.1| unnamed protein product [Urochloa hum	84.3	1.70e-111	317.8
+NP_001408117.1	NP_001408117.1 protein RICE FLOWERING LOCUS T 1 [Oryza sativa Japonica Group]	CAL5036879	emb|CAL5036879.1| unnamed protein product [Urochloa decumbens]	86.5	2.59e-111	317.0
+NP_001408117.1	NP_001408117.1 protein RICE FLOWERING LOCUS T 1 [Oryza sativa Japonica Group]	CAL5051155	emb|CAL5051155.1| unnamed protein product [Urochloa decumbens] >emb|CAM0146821.1| unnamed protein product [Urochloa decu	86.0	3.68e-111	316.6
+NP_001106247.1	NP_001106247.1 ZCN8 protein [Zea mays]	CAL4894450	emb|CAL4894450.1| unnamed protein product [Urochloa decumbens]	86.2	7.37e-107	305.4
+NP_001106247.1	NP_001106247.1 ZCN8 protein [Zea mays]	CAL5095835	emb|CAL5095835.1| unnamed protein product [Urochloa decumbens]	85.6	5.37e-106	303.1
+NP_001106247.1	NP_001106247.1 ZCN8 protein [Zea mays]	CAL4902238	emb|CAL4902238.1| unnamed protein product [Urochloa decumbens]	86.2	1.56e-104	299.3
+NP_001106247.1	NP_001106247.1 ZCN8 protein [Zea mays]	CAL4974062	emb|CAL4974062.1| unnamed protein product [Urochloa decumbens]	78.9	4.49e-103	296.2
+NP_001106247.1	NP_001106247.1 ZCN8 protein [Zea mays]	CAL4961404	emb|CAL4961404.1| unnamed protein product [Urochloa decumbens]	78.9	6.17e-103	295.8
+NP_001320342.1	NP_001320342.1 PEBP [Arabidopsis thaliana]	CAO2186198	emb|CAO2186198.1| unnamed protein product [Urochloa humidicola] >emb|CAO2194200.1| unnamed protein product [Urochloa hum	72.8	5.89e-96	280.0
+NP_001320342.1	NP_001320342.1 PEBP [Arabidopsis thaliana]	CAN6165038	emb|CAN6165038.1| unnamed protein product [Urochloa humidicola] >emb|CAN6179260.1| unnamed protein product [Urochloa hum	72.9	6.19e-96	280.0
+NP_001320342.1	NP_001320342.1 PEBP [Arabidopsis thaliana]	CAL4966042	emb|CAL4966042.1| unnamed protein product [Urochloa decumbens] >emb|CAL4978606.1| unnamed protein product [Urochloa decu	74.0	7.82e-96	279.6
+NP_001320342.1	NP_001320342.1 PEBP [Arabidopsis thaliana]	CAL4958999	emb|CAL4958999.1| unnamed protein product [Urochloa decumbens]	74.0	8.26e-96	279.6
+NP_001320342.1	NP_001320342.1 PEBP [Arabidopsis thaliana]	CAL4952393	emb|CAL4952393.1| unnamed protein product [Urochloa decumbens]	73.4	2.03e-95	278.5
