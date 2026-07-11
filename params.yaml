@@ -18,7 +18,9 @@ query_proteins: "reference_queries.fasta"
 #   - 3 MFT-like verificados por BLASTP (Arabidopsis NP_173250.1, arroz
 #     NP_001410922.1, milho NP_001106249.1 ZCN10) — usados como outgroup
 #     (ver iqtree_outgroup no nextflow.config) por serem basais ao split
-#     FT/TFL1 (Wickland & Hanzawa 2015)
+#     FT/TFL1 (Karlgren et al. 2011; de Jesus et al. 2022 — ver artigo.md
+#     §6.9 para a citação completa e a correção da atribuição anterior,
+#     que citava Wickland & Hanzawa 2015 sem essa afirmação específica)
 # Resolve a lacuna de discriminação FT vs. TFL1/MFT (Decisão 3 do plano
 # científico) e mantém o contexto de parentes próximos de Urochloa.
 phylo_reference: "reference_queries_expanded_tfl1_mft.fasta"
@@ -26,8 +28,12 @@ phylo_reference: "reference_queries_expanded_tfl1_mft.fasta"
 outdir: "results"
 threads: 32
 
-# Outgroup MFT-like (basal ao split FT/TFL1) pra enraizar a árvore com
-# significado biológico de verdade — sem isso o IQ-TREE escreve um Newick
-# tecnicamente não-enraizado (foi o que produziu a posição estranha de
-# locus_001 "na base" da árvore anterior, sem suporte real).
+# Outgroup MFT-like (basal ao split FT/TFL1), tentativa de enraizar a árvore.
+# NOTA (2026-07-11): com essas 3 sequências o IQ-TREE reporta a árvore como
+# "UNROOTED although outgroup taxon 'NP_173250.1' is drawn at root" -- as 3
+# MFT-like não formam clado monofilético nesta topologia (NP_173250.1 fica
+# isolado). A separação FT-like vs. TFL1-like continua robusta (bootstrap
+# 98-100), mas o enraizamento pretendido não foi resolvido -- ver artigo.md
+# §3.4 para a correção completa e §3.4 para a recomendação de rerodar só
+# com o par (NP_001410922.1, NP_001106249.1), que forma clado de verdade.
 iqtree_outgroup: "NP_173250.1,NP_001410922.1,NP_001106249.1"

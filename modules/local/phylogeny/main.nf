@@ -19,11 +19,14 @@ process PHYLOGENY {
     path 'trimmed.fasta', emit: trimmed_aln
 
     script:
-    // Outgroup MFT-like (basal ao split FT/TFL1 — Wickland & Hanzawa 2015) para
-    // enraizar a árvore com significado biológico. Sem isso o IQ-TREE escreve um
-    // Newick tecnicamente não-enraizado e arbitrário (já vimos locus_001 aparecer
-    // "na base" sem suporte real por causa disso). Lista de IDs (primeiro token
-    // do header FASTA, separados por vírgula) vem de params.iqtree_outgroup.
+    // Outgroup MFT-like (basal ao split FT/TFL1 — Karlgren et al. 2011; de Jesus
+    // et al. 2022) — tentativa de enraizar a árvore com significado biológico.
+    // NOTA: com as 3 sequências MFT-like atuais, o IQ-TREE ainda reporta a árvore
+    // como "UNROOTED" (as 3 não formam clado monofilético nesta topologia — ver
+    // artigo.md §3.4). A separação FT-like vs. TFL1-like continua robusta mesmo
+    // assim; o enraizamento pretendido, especificamente, não foi resolvido.
+    // Lista de IDs (primeiro token do header FASTA, separados por vírgula) vem
+    // de params.iqtree_outgroup.
     def outgroupFlag = params.iqtree_outgroup ? "-o ${params.iqtree_outgroup}" : ''
     """
     if [ ! -s candidate_proteins_confirmed.fasta ]; then
