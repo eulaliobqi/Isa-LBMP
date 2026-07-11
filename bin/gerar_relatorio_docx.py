@@ -239,6 +239,14 @@ add_table(
     col_widths_cm=[1.2, 4, 7, 3],
 )
 para(doc, "")
+add_figure(
+    doc,
+    FIG / "esquema_pipeline.png",
+    "Figura A. Fluxograma do pipeline de bioinformática (11 processos Nextflow), "
+    "agrupados por função: descoberta de loci (azul), confirmação de ortologia "
+    "(verde-água) e filogenia/relatório (violeta).",
+    width_cm=11,
+)
 para(
     doc,
     "Sequências de query FT-like (reference_queries.fasta): 4 proteínas de referência "
@@ -504,6 +512,15 @@ add_table(
     col_widths_cm=[3, 2.5, 5, 5],
 )
 para(doc, "")
+add_figure(
+    doc,
+    FIG / "esquema_subgenomas_decumbens.png",
+    "Figura D. Composição de subgenomas dos 36 cromossomos do assembly de "
+    "U. decumbens cv. Basilisk (18 do subgenoma U. brizantha diploide, 18 do "
+    "subgenoma U. ruziziensis/decumbens diploide) e posição das 3 cópias "
+    "homeólogas de locus_001 localizadas em cromossomos nomeados.",
+    width_cm=16,
+)
 para(
     doc,
     "CAL5051155.1 (gene URODEC1_LOCUS91967, cromossomo 36b, "
@@ -522,6 +539,15 @@ para(
     "confirmada de forma independente, reforçando a confiança na predição "
     "original.",
 )
+add_figure(
+    doc,
+    FIG / "esquema_estrutura_genica.png",
+    "Figura E. Estrutura gênica em escala: predição original de locus_001 "
+    "(só CDS, via miniprot, sem UTR) comparada à anotação real do gene "
+    "homólogo no subgenoma brizantha (URODEC1_LOCUS91967) — mesmos 4 éxons/3 "
+    "íntrons, agora com UTRs 5' e 3' reais.",
+    width_cm=16,
+)
 para(
     doc,
     "O que isso não resolve: a cv. Basilisk (U. decumbens) não é a cv. Marandu "
@@ -532,6 +558,15 @@ para(
     "U. brizantha de verdade, com risco de divergência residual já quantificado "
     "como baixo. Sequências completas disponíveis em brizantha_search/ no "
     "repositório do projeto.",
+)
+add_figure(
+    doc,
+    FIG / "esquema_convergencia_evidencias.png",
+    "Figura F. Síntese das seis linhas de evidência independentes que "
+    "confirmam locus_001 como candidato a ortólogo de FT — sequência "
+    "(TBLASTN, BLASTN_CDS, miniprot), ortologia (RBH), filogenia e, agora, "
+    "confirmação direta no subgenoma real de U. brizantha.",
+    width_cm=13,
 )
 
 # ---- 4. Discussão -----------------------------------------------------------
