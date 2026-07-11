@@ -152,13 +152,26 @@ para(
 )
 para(
     doc,
+    "Um TERCEIRO achado, obtido no mesmo dia da revisão que originou este relatório "
+    "(11/07/2026), reduz diretamente a maior limitação apontada abaixo: não existe "
+    "assembly próprio de U. brizantha, mas o assembly haplótipo-resolvido de "
+    "Urochloa decumbens cv. Basilisk (GCA_964030465.3) tem cromossomos rotulados "
+    "por origem de subgenoma, e 18 deles vêm de U. brizantha diploide real. Uma "
+    "busca de locus_001 nesse proteoma encontrou uma cópia no subgenoma brizantha "
+    "com 99,4% de identidade (1 aminoácido de diferença) e anotação de UTRs reais "
+    "— informação que a predição original nunca teve (Seção 3.7).",
+    bold=True,
+)
+para(
+    doc,
     "IMPORTANTE — este relatório distingue explicitamente \"candidato confirmado por "
     "bioinformática\" de \"sequência pronta para desenho final de dsRNA em bancada\". "
-    "A Seção 5 detalha três gargalos que devem ser resolvidos antes de qualquer síntese "
-    "de dsRNA: ausência de validação experimental, divergência não quantificada entre "
-    "a espécie usada na análise (U. ruziziensis) e a espécie-alvo real (U. brizantha), "
-    "e ausência da análise de especificidade off-target exigida pela proposta científica "
-    "do projeto.",
+    "A Seção 5 detalha os gargalos que devem ser resolvidos antes de qualquer síntese "
+    "de dsRNA. Dois deles — divergência entre a espécie usada na análise original e a "
+    "espécie-alvo real, e ausência de UTR — foram substancialmente reduzidos pelo "
+    "achado acima. Seguem sem resolver: ausência de validação experimental na "
+    "cultivar de trabalho (Marandu) e ausência da análise de especificidade "
+    "off-target exigida pela proposta científica do projeto.",
 )
 
 # ---- 1. Introdução -------------------------------------------------------
@@ -450,13 +463,75 @@ para(
 heading(doc, "3.6 Espécie-proxy: Urochloa ruziziensis", level=2)
 para(
     doc,
-    "Todos os resultados acima referem-se a loci identificados no genoma de "
-    "Urochloa ruziziensis, usado como proxy diploide na ausência de assembly próprio "
-    "de U. brizantha. Nenhuma das 15 sequências homólogas recuperadas por BLASTP "
-    "(Seção 2.2) pertence a U. ruziziensis ou U. brizantha especificamente — todas "
-    "vêm de U. humidicola e U. decumbens, refletindo a escassez de proteínas "
-    "anotadas das duas primeiras espécies em bancos públicos. As implicações práticas "
-    "dessa limitação para o desenho de dsRNA estão detalhadas na Seção 5.2.",
+    "Todos os resultados das Seções 3.1 a 3.5 referem-se a loci identificados no "
+    "genoma de Urochloa ruziziensis, usado como proxy diploide na ausência de "
+    "assembly próprio de U. brizantha. Nenhuma das 15 sequências homólogas "
+    "recuperadas por BLASTP (Seção 2.2) pertence a U. ruziziensis ou U. brizantha "
+    "especificamente — todas vêm de U. humidicola e U. decumbens, refletindo a "
+    "escassez de proteínas anotadas das duas primeiras espécies em bancos públicos. "
+    "Esta limitação foi substancialmente mitigada pelo achado da Seção 3.7.",
+)
+
+heading(doc, "3.7 Confirmação em subgenoma real de U. brizantha (achado de 11/07/2026)", level=2)
+para(
+    doc,
+    "Não existe assembly próprio de U. brizantha, mas existe algo melhor que o "
+    "proxy usado nas Seções 3.1–3.6: o assembly haplótipo-resolvido, "
+    "cromossomo-completo de Urochloa decumbens cv. Basilisk (GCA_964030465.3, de "
+    "Vega Group/Earlham Institute, ENA, BioProject PRJEB73762) é um alotetraploide "
+    "cujos 36 cromossomos foram rotulados por origem de subgenoma, confirmado no "
+    "próprio texto do artigo original: sufixo \"b\" = subgenoma derivado de "
+    "U. brizantha diploide; sufixo \"rd\" = subgenoma derivado de "
+    "U. ruziziensis/U. decumbens diploide.",
+)
+para(
+    doc,
+    "BLASTP local (BLAST+ 2.17.0) da proteína de locus_001 contra o proteoma "
+    "anotado de U. decumbens (150.710 proteínas) encontrou 5 cópias quase "
+    "idênticas (99,4–100% identidade), refletindo a redundância de haplótipos do "
+    "assembly:",
+)
+add_table(
+    doc,
+    ["Accession", "Identidade", "Cromossomo", "Subgenoma"],
+    [
+        ["CAL5036879.1", "100,0%", "33rd", "ruziziensis/decumbens"],
+        ["CAM0151951.1", "99,4%", "scaffold não localizado", "—"],
+        ["CAM0146821.1", "99,4%", "scaffold não localizado", "—"],
+        ["CAL5051155.1", "99,4%", "36b", "brizantha (real)"],
+        ["CAL5044486.1", "99,4%", "34rd", "ruziziensis/decumbens"],
+    ],
+    col_widths_cm=[3, 2.5, 5, 5],
+)
+para(doc, "")
+para(
+    doc,
+    "CAL5051155.1 (gene URODEC1_LOCUS91967, cromossomo 36b, "
+    "OZ075146.1:7.157.787–7.159.709, fita +) é a cópia real do subgenoma "
+    "brizantha e difere da predição de locus_001 (via U. ruziziensis) por "
+    "exatamente 1 aminoácido (posição ~53, V→I) — 173/174 aa idênticos.",
+    bold=True,
+)
+para(
+    doc,
+    "Dois ganhos diretos: (1) a divergência espécie-proxy, antes desconhecida, "
+    "agora é um número baixo e conhecido — 1 substituição conservativa em 174 "
+    "posições; (2) o gene tem anotação de mRNA completo com UTRs reais (1.222 nt "
+    "totais vs. 525 nt de CDS, ~697 nt de UTR 5'+3'), algo que a predição via "
+    "miniprot em U. ruziziensis nunca teve. A estrutura de 4 éxons/3 íntrons foi "
+    "confirmada de forma independente, reforçando a confiança na predição "
+    "original.",
+)
+para(
+    doc,
+    "O que isso não resolve: a cv. Basilisk (U. decumbens) não é a cv. Marandu "
+    "(U. brizantha, a cultivar real do projeto) — pode haver diferença adicional "
+    "entre cultivares/acessos não capturada aqui. Confirmação por PCR e "
+    "sequenciamento Sanger em DNA genômico real da cv. Marandu continua "
+    "recomendada (Seção 5.1), mas agora partindo de uma sequência-molde de "
+    "U. brizantha de verdade, com risco de divergência residual já quantificado "
+    "como baixo. Sequências completas disponíveis em brizantha_search/ no "
+    "repositório do projeto.",
 )
 
 # ---- 4. Discussão -----------------------------------------------------------
@@ -522,22 +597,32 @@ para(
     bold=True,
 )
 
-heading(doc, "5.2 Gap espécie-proxy não quantificado (bloqueante)", level=2)
+heading(doc, "5.2 Gap espécie-proxy — PARCIALMENTE RESOLVIDO em 11/07/2026 (era bloqueante)", level=2)
 para(
     doc,
-    "locus_001 foi encontrado em U. ruziziensis (diploide), não em U. brizantha "
-    "(poliploide agâmica, a espécie real de bancada). Não há estimativa de "
-    "percentual de identidade esperado entre as duas espécies nessa região "
-    "específica — o risco de mismatch em primers (mais sensível a poucos SNPs do "
-    "que dsRNA processado) é real e de magnitude atualmente desconhecida.",
+    "locus_001 foi originalmente encontrado só em U. ruziziensis (diploide), não "
+    "em U. brizantha (poliploide agâmica, a espécie real de bancada), sem nenhuma "
+    "estimativa de divergência entre as duas.",
 )
 para(
     doc,
-    "Recomendação: não finalizar primers/dsRNA a partir da sequência de "
-    "U. ruziziensis isolada. Usar o sequenciamento Sanger de U. brizantha real "
-    "(Seção 5.1) para gerar a sequência-alvo definitiva. Se primers forem usados "
-    "agora para triagem, desenhá-los com bases degeneradas ou em regiões mais "
-    "conservadas.",
+    "Atualização (Seção 3.7): o subgenoma brizantha real do assembly de "
+    "U. decumbens cv. Basilisk (GCA_964030465.3) tem uma cópia quase idêntica "
+    "(CAL5051155.1, cromossomo 36b) — 99,4% idêntica, 1 substituição de "
+    "aminoácido em 174. A divergência deixou de ser uma incógnita e passou a ser "
+    "um número baixo e conhecido.",
+    bold=True,
+)
+para(
+    doc,
+    "O que ainda falta: essa é a cultivar Basilisk, não a Marandu (cultivar real "
+    "do projeto) — pode haver diferença adicional entre cultivares/acessos de "
+    "brizantha não capturada aqui. Recomendação atualizada: usar a sequência "
+    "brizantha_CDS.fasta (Seção 3.7) — não mais a predição em U. ruziziensis "
+    "isolada — como molde para desenho de primers de triagem; confirmar por PCR e "
+    "Sanger em DNA genômico real da cv. Marandu (Seção 5.1) antes do desenho "
+    "final, agora partindo de uma base de brizantha de verdade com risco de "
+    "divergência residual já conhecido como baixo.",
     bold=True,
 )
 
@@ -578,22 +663,30 @@ para(
     bold=True,
 )
 
-heading(doc, "5.5 Extensão exata do transcrito incerta", level=2)
+heading(doc, "5.5 Extensão exata do transcrito — PARCIALMENTE RESOLVIDO em 11/07/2026", level=2)
 para(
     doc,
-    "O modelo gênico de locus_001 (4 éxons, 3 íntrons, stop códon no lugar "
-    "esperado — estrutura compatível com FT de gramíneas) vem inteiramente de "
-    "alinhamento spliced-aware de proteínas de referência de outras espécies contra "
-    "o genoma (miniprot), não de RNA-seq real de Urochloa. Não há UTR modelada nem "
-    "confirmação de sítio real de início/fim de transcrição.",
+    "O modelo gênico original de locus_001 (4 éxons, 3 íntrons, stop códon no "
+    "lugar esperado) veio inteiramente de alinhamento spliced-aware via miniprot, "
+    "sem UTR modelada.",
 )
 para(
     doc,
-    "Recomendação: antes de fixar as bordas do amplicon/dsRNA, realizar 5'/3' RACE "
-    "(ou RT-PCR ancorado com extensão para regiões flanqueadoras) em RNA real de "
-    "U. brizantha — a UTR 3' é frequentemente preferida para desenho de dsRNA/RT-qPCR "
-    "por ser mais específica e menos conservada entre parálogos, e essa região "
-    "simplesmente não existe na predição atual.",
+    "Atualização (Seção 3.7): o gene homólogo real no subgenoma brizantha do "
+    "assembly U. decumbens (URODEC1_LOCUS91967) tem anotação de mRNA completo com "
+    "UTRs (1.222 nt totais, 525 nt de CDS, ~697 nt de UTR 5'+3' reais). A "
+    "estrutura de 4 éxons/3 íntrons foi confirmada de forma independente.",
+    bold=True,
+)
+para(
+    doc,
+    "O que ainda falta: não está confirmado se a anotação de UTR veio de "
+    "evidência transcricional direta (RNA-seq) da própria U. decumbens/brizantha "
+    "ou de modelo computacional. Recomendação atualizada: usar "
+    "brizantha_mRNA_with_UTR.fasta (Seção 3.7) como ponto de partida para desenho "
+    "de primers/dsRNA na região de UTR 3' (mais específica entre parálogos), mas "
+    "confirmar por 5'/3' RACE ou RT-PCR ancorado em RNA real de U. brizantha cv. "
+    "Marandu antes do desenho final.",
     bold=True,
 )
 
@@ -632,11 +725,17 @@ heading(doc, "5.8 Síntese das limitações", level=2)
 para(
     doc,
     "locus_001 é um candidato forte e bem fundamentado dentro do que a "
-    "bioinformática pode provar. Isso não é o mesmo que \"pronto para desenho final "
-    "de primers/dsRNA em bancada\". Os itens 5.1 a 5.3 (validação experimental, gap "
-    "de espécie-proxy, off-target) são bloqueantes reais e recomenda-se resolvê-los "
-    "em sequência — sequenciamento Sanger de U. brizantha real primeiro, depois "
-    "análise de off-target — antes de qualquer decisão de síntese de dsRNA.",
+    "bioinformática pode provar, e ficou mais forte ainda em 11/07/2026 com a "
+    "confirmação em sequência real de brizantha (Seção 3.7): divergência de "
+    "apenas 1 aminoácido e UTRs reais disponíveis, reduzindo dois gargalos "
+    "(5.2, 5.5) de \"bloqueante\" para \"parcialmente resolvido\". Isso ainda não "
+    "é o mesmo que \"pronto para desenho final de primers/dsRNA em bancada\". "
+    "Seguem bloqueantes: 5.1 (validação experimental — nenhum PCR/RT-PCR real "
+    "feito ainda) e 5.3 (off-target — ainda não avaliado, exigido pela "
+    "proposta). Recomendação de sequência: PCR e Sanger em DNA genômico real da "
+    "cv. Marandu usando a sequência de brizantha_CDS.fasta (Seção 3.7) como "
+    "molde primeiro, depois off-target, antes de qualquer decisão de síntese de "
+    "dsRNA.",
     bold=True,
 )
 
@@ -651,16 +750,23 @@ para(
     "conservadas para desenho de dsRNA (Objetivo Específico 1 da proposta "
     "científica). Um segundo achado — a reclassificação de locus_012 como "
     "ortólogo de MFT, não de FT — refina a compreensão da família gênica FT-like em "
-    "Urochloa e evita um possível erro de direcionamento do dsRNA.",
+    "Urochloa e evita um possível erro de direcionamento do dsRNA. Um terceiro "
+    "achado, obtido no mesmo dia da revisão que originou este relatório, elevou "
+    "a confiança no resultado de forma direta: a busca da sequência de locus_001 "
+    "no subgenoma real de U. brizantha, presente no assembly publicado de "
+    "U. decumbens cv. Basilisk, encontrou uma cópia 99,4% idêntica — divergência "
+    "mínima e agora quantificada, com UTRs reais disponíveis pela primeira vez.",
 )
 para(
     doc,
     "Ao mesmo tempo, este relatório documenta de forma explícita e honesta os "
-    "limites do que a bioinformática pode garantir sozinha: o resultado é in "
-    "silico, baseado numa espécie-proxy, e ainda carece da análise de "
-    "especificidade off-target exigida pela própria proposta. A Seção 5 define um "
-    "caminho concreto e sequencial para transformar este candidato confirmado por "
-    "bioinformática em uma sequência segura para síntese de dsRNA em bancada.",
+    "limites do que a bioinformática pode garantir sozinha: o resultado ainda é "
+    "in silico e carece da análise de especificidade off-target exigida pela "
+    "própria proposta, além de confirmação experimental direta na cultivar de "
+    "trabalho (Marandu). A Seção 5 define um caminho concreto e sequencial para "
+    "transformar este candidato confirmado por bioinformática — agora apoiado em "
+    "sequência real de brizantha — em uma sequência segura para síntese de "
+    "dsRNA em bancada.",
 )
 
 # ---- Referências ------------------------------------------------------------
