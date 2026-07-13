@@ -78,7 +78,8 @@ def build_heatmap(loci_df, out_path):
         genes = str(row.get("queries", "")).split(";")
         for gene in genes:
             gene = gene.strip()
-            if gene:
+            # Mostrar só genes de referência proteicos (NP_*), não sequências CDS nucleotídicas
+            if gene and gene.startswith("NP_"):
                 rows.append({"locus_id": row.locus_id, "gene": gene, "bitscore": row.get("best_bitscore") or 0})
     long_df = pd.DataFrame(rows)
     if long_df.empty:
