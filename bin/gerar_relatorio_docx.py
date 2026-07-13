@@ -569,6 +569,62 @@ add_figure(
     width_cm=13,
 )
 
+heading(doc, "3.8 Correlação locus_XXX (pipeline) com gene ID real no subgenoma brizantha", level=2)
+para(
+    doc,
+    "A Seção 3.7 confirmou locus_001 no subgenoma real de U. brizantha. Essa "
+    "mesma metodologia (BLASTP local contra o proteoma anotado de U. decumbens "
+    "cv. Basilisk, cruzado com o mapeamento cromossomo-subgenoma) foi estendida "
+    "às outras 5 loci que também confirmam pebp_confirmed=True e "
+    "rbh_confirmed=True no pipeline (locus_002, 005, 009, 012, 015), para "
+    "correlacionar cada identificador interno do pipeline com um gene ID real.",
+)
+para(
+    doc,
+    "Verificação prévia: o assembly-alvo Embrapa_Uruz_1.0 (U. ruziziensis) não "
+    "tem anotação gênica oficial no NCBI (sem campo annotation_info retornado "
+    "pela API de datasets) — não existe \"gene ID NCBI\" nativo para nenhum "
+    "locus_XXX na espécie-proxy. O único ID de gene real disponível vem da "
+    "correlação com o subgenoma brizantha do assembly de decumbens, como já "
+    "feito para locus_001.",
+)
+add_table(
+    doc,
+    ["Locus (pipeline)", "Classificação", "Melhor cópia subgenoma b", "Identidade", "Gene ID (locus_tag)"],
+    [
+        ["locus_001", "FT-like (Hd3a/RFT1-type)", "CAL5051155.1", "99,4%", "URODEC1_LOCUS91967 (chr 36b)"],
+        ["locus_002", "FT-like (fragmento fraco)", "CAL5082316.1 / CAL5087382.1 (empate)", "100,0%", "URODEC1_LOCUS109225 / 112169 (chr 7b/8b)"],
+        ["locus_005", "FT-like (ZCN8-type)", "CAL4902238.1", "91,6%", "URODEC1_LOCUS9836 (chr 11b)"],
+        ["locus_009", "FT-like (par 009/015)", "CAL4952393.1", "98,8%", "URODEC1_LOCUS39484 (chr 17b)"],
+        ["locus_012", "MFT-like (reclassificado)", "CAL4950975.1", "100,0%", "URODEC1_LOCUS38694 (chr 17b)"],
+        ["locus_015", "FT-like (par 009/015)", "CAL4952393.1", "98,8%", "URODEC1_LOCUS39484 (chr 17b)"],
+    ],
+    col_widths_cm=[3, 4, 4.5, 2.5, 5],
+)
+para(doc, "")
+para(
+    doc,
+    "Achados notáveis: locus_001 segue sendo o único caso em que a cópia do "
+    "subgenoma b já é, ao mesmo tempo, o melhor hit geral de todo o proteoma "
+    "decumbens. Nos outros 5 loci, o melhor hit geral cai numa cópia rd, e a "
+    "cópia b correspondente tem identidade igual ou, no caso de locus_005, "
+    "sensivelmente menor (91,6% vs. 100% da cópia rd) — a maior divergência "
+    "observada entre as 6 loci confirmadas. locus_009 e locus_015 (parálogos "
+    "quase idênticos já identificados na filogenia) convergem para exatamente "
+    "a mesma cópia b (CAL4952393.1/URODEC1_LOCUS39484), replicando por método "
+    "independente o sinal de parologia recente. locus_012 está na tabela só "
+    "por rastreabilidade de ID — já reclassificado como MFT-like (Seção 3.5), "
+    "não é candidato ao gene FT-like da proposta. locus_002 é o caso mais "
+    "frágil: fragmento de 76 aa com 3 cópias empatadas em 100% no proteoma "
+    "decumbens (1 rd + 2 b) — evidência insuficiente para apontar uma única "
+    "cópia b como correta.",
+)
+para(
+    doc,
+    "Tabela completa e arquivos de BLASTP em brizantha_search/"
+    "loci_brizantha_correlation.tsv no repositório do projeto.",
+)
+
 # ---- 4. Discussão -----------------------------------------------------------
 heading(doc, "4. Discussão", level=1)
 bullet(
