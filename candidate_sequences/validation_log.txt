@@ -1,0 +1,19 @@
+Log de validacao -- extracao de nucleotideo (candidate_sequences/)
+======================================================================
+locus_001 (MP000001): PASS | CDS=540bp | traduzido=179aa | esperado=179aa
+locus_005 (MP000003): PASS | CDS=528bp | traduzido=175aa | esperado=175aa
+locus_009 (MP000004): PASS | CDS=564bp | traduzido=187aa | esperado=187aa
+locus_015 (MP000005): PASS | CDS=510bp | traduzido=169aa | esperado=169aa
+locus_002: INFORMATIVO (sem validacao possivel, sem modelo de exon) | span_bruto=4674bp
+locus_012: INFORMATIVO (sem validacao possivel, sem modelo de exon) | span_bruto=20344bp
+
+======================================================================
+Verificacao adicional 2026-07-13: correcao de artefato de N-terminal
+(alinhamento par-a-par contra ortologos reais no subgenoma brizantha)
+======================================================================
+locus_001: CORRIGIDO. Predicao bruta do miniprot tinha 5 aminoacido(s) extra(s) no N-terminal (LVAIG) que nao correspondem ao gene real (confirmado por alinhamento contra ortologo no subgenoma brizantha, brizantha_search/real_orthologs_decumbens.fasta). CDS bruto 540bp -> corrigido 525bp. Proteina bruta 179aa -> corrigida 174aa.
+locus_002: SEM MODELO DE EXON -- nao ha CDS reconstruido para corrigir (so fragmento de proteina via TBLASTN). Mantido como span genomico bruto, ja rotulado RAW_GENOMIC_SPAN. Contexto novo desta verificacao: alinhamento contra o ortologo real mostra que o fragmento corresponde a uma janela interna da proteina completa (ver README para as coordenadas exatas).
+locus_005: CORRIGIDO. Predicao bruta do miniprot tinha 8 aminoacido(s) extra(s) no N-terminal (YNSTHPLV) que nao correspondem ao gene real (confirmado por alinhamento contra ortologo no subgenoma brizantha, brizantha_search/real_orthologs_decumbens.fasta). CDS bruto 528bp -> corrigido 504bp. Proteina bruta 175aa -> corrigida 167aa.
+locus_009: CORRIGIDO. Predicao bruta do miniprot tinha 14 aminoacido(s) extra(s) no N-terminal (EDPSTRHRSASYRR) que nao correspondem ao gene real (confirmado por alinhamento contra ortologo no subgenoma brizantha, brizantha_search/real_orthologs_decumbens.fasta). CDS bruto 564bp -> corrigido 522bp. Proteina bruta 187aa -> corrigida 173aa.
+locus_012: SEM MODELO DE EXON -- nao ha CDS reconstruido para corrigir (so fragmento de proteina via TBLASTN). Mantido como span genomico bruto, ja rotulado RAW_GENOMIC_SPAN. Contexto novo desta verificacao: alinhamento contra o ortologo real mostra que o fragmento corresponde a uma janela interna da proteina completa (ver README para as coordenadas exatas).
+locus_015: SEM CORRECAO POSSIVEL (nao ha residuo espurio a remover). Alinhamento contra o ortologo real (CAL4952393.1, mesma copia de locus_009) mostra que locus_015 esta FALTANDO os 4 primeiros aminoacidos do gene real (MRRG) -- o miniprot simplesmente nao encontrou essa extensao N-terminal durante o alinhamento spliced contra a proteina de Arabidopsis FT (Target=NP_001320342.1 51 219, ou seja, comeca na posicao 51 de 219 da referencia). Predicao mantida como esta -- e parcial mas nao contem erro, so incompletude.

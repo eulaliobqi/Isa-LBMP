@@ -22,3 +22,6 @@ sbp5_ft_extracted.txt
 # Sistema
 .DS_Store
 *.log
+__pycache__/
+*.docx.bak*
+~$*.docx

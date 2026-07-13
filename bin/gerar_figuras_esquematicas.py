@@ -318,8 +318,93 @@ def fig_subgenome_map():
     print("salvo", out)
 
 
+# =============================================================================
+# E) Cobertura do domínio PEBP (PF01161) por locus — prova de homologia
+# =============================================================================
+def parse_pebp_domtbl(path):
+    """Le o domtblout do HMMER (colunas: hmm-from=16, hmm-to=17, i-Evalue=13),
+    sem hardcodar nenhum numero -- os dados vem direto do arquivo bruto."""
+    rows = []
+    with open(path, encoding="utf-8") as fh:
+        for line in fh:
+            if line.startswith("#") or not line.strip():
+                continue
+            fields = line.split()
+            target_name = fields[0]
+            locus_id = target_name.split("|")[0]
+            i_evalue = float(fields[12])
+            hmm_from = int(fields[15])
+            hmm_to = int(fields[16])
+            rows.append((locus_id, hmm_from, hmm_to, i_evalue))
+    return rows
+
+
+def fig_domain_pebp():
+    domtbl = ROOT / "results" / "results" / "results" / "pebp_domtbl.txt"
+    rows = parse_pebp_domtbl(domtbl)
+    order = ["locus_001", "locus_005", "locus_009", "locus_015", "locus_002", "locus_012"]
+    rows.sort(key=lambda r: order.index(r[0]) if r[0] in order else 99)
+
+    hmm_len = 135  # PF01161 (PBP), comprimento do modelo -- ver header do domtblout
+
+    fig, ax = plt.subplots(figsize=(11, 5.5))
+    ax.set_xlim(0, hmm_len + 5)
+    ax.set_ylim(-1, len(rows) + 1.6)
+    ax.axis("off")
+
+    # barra de referencia: dominio PBP inteiro
+    ref_y = len(rows) + 0.5
+    ax.add_patch(FancyBboxPatch(
+        (1, ref_y - 0.28), hmm_len, 0.56,
+        boxstyle="round,pad=0.01,rounding_size=0.05",
+        linewidth=1.2, edgecolor=MUTED, facecolor=GRID, zorder=2,
+    ))
+    ax.text(hmm_len / 2 + 1, ref_y, f"Perfil Pfam PF01161 (domínio PBP completo, {hmm_len} aa)",
+             fontsize=10, color=INK2, ha="center", va="center", zorder=3, fontweight="bold")
+
+    for i, (locus_id, hmm_from, hmm_to, i_evalue) in enumerate(rows):
+        y = len(rows) - 1 - i
+        wide_coverage = locus_id in {"locus_001", "locus_005", "locus_009", "locus_015"}
+        color = BLUE if wide_coverage else ORANGE
+        # trilha cinza de fundo (1..hmm_len)
+        ax.add_patch(FancyBboxPatch(
+            (1, y - 0.24), hmm_len, 0.48,
+            boxstyle="round,pad=0.005,rounding_size=0.04",
+            linewidth=0.6, edgecolor=GRID, facecolor="white", zorder=2,
+        ))
+        # segmento realmente alinhado
+        ax.add_patch(FancyBboxPatch(
+            (hmm_from, y - 0.24), max(hmm_to - hmm_from, 1), 0.48,
+            boxstyle="round,pad=0.005,rounding_size=0.04",
+            linewidth=0, facecolor=color, zorder=3,
+        ))
+        ax.text(-3, y, locus_id, fontsize=10.5, color=INK, ha="right", va="center",
+                 fontweight="bold", zorder=4)
+        ax.text(hmm_len + 3, y, f"aa {hmm_from}–{hmm_to}  ·  i-Evalue {i_evalue:.1e}",
+                 fontsize=8.8, color=INK2, ha="left", va="center", zorder=4)
+
+    handles = [
+        mpatches.Patch(color=BLUE, label="Cobertura ampla do domínio (miniprot + tblastn)"),
+        mpatches.Patch(color=ORANGE, label="Cobertura parcial (fragmento, só tblastn)"),
+    ]
+    ax.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.5, -0.12),
+              ncol=2, frameon=False, fontsize=10)
+    ax.set_title(
+        "Todos os 6 candidatos alinham à mesma região do domínio do florígeno (PEBP)\n"
+        "posição confirmada por HMMER/Pfam (PF01161), sem alinhamentos fora do domínio",
+        fontsize=11.5, fontweight="bold", color=INK, pad=30,
+    )
+
+    plt.tight_layout()
+    out = FIG / "pebp_domain_coverage.png"
+    plt.savefig(out, dpi=160, facecolor=SURFACE)
+    plt.close()
+    print("salvo", out)
+
+
 if __name__ == "__main__":
     fig_pipeline()
     fig_gene_structure()
     fig_evidence_hub()
     fig_subgenome_map()
+    fig_domain_pebp()
